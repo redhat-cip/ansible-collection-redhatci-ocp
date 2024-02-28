@@ -7,7 +7,7 @@
       --disk {{ rhde_builder_image_file }},format=qcow2,bus=scsi
       --controller type=scsi,model=virtio-scsi
       --network bridge=virbr0,model=virtio
-      --os-variant=rhel{{ rhde_builder_rhel_version }}
+      --os-variant=rhel{{ rhde_builder_rhel_version.split('.')[0] }}-unknown
       --nographics --noautoconsole --import
       --cloud-init ssh-key={{ rhde_builder_ssh_pubkey }},disable=no
 
