@@ -29,7 +29,7 @@ Example Playbook
 
     - name: Install iso on VM
       import_role:
-        name: iso_install
+        name: install_iso
       vars:
         boot_iso_url: http://localhost:80/e510c409-f07f-453c-8e05-3322816c8915-installer.iso
         target_host: "my_test_vm"

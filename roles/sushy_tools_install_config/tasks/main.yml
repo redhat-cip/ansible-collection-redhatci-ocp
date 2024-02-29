@@ -8,7 +8,7 @@
           ) }}"
         state: present
 
-    - name: "Create sushy-tools directory {{ item }}"
+    - name: Create sushy-tools directories
       file:
         path: "{{ item }}"
         state: directory
@@ -22,7 +22,7 @@
     - name: Install setuptools-rust and update pip in a virtual environment
       pip:
         name: ['setuptools-rust', 'pip']
-        virtualenv_command: "python3 -m venv"
+        virtualenv_command: "python3 -m venv --system-site-packages"
         extra_args: --upgrade
         virtualenv: "{{ sushy_dir }}"
 
