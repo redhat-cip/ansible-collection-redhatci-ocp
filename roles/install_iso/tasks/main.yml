@@ -7,7 +7,7 @@
 - name: Identify System Manager
   uri:
     url: "{{ base_bmc_address }}/redfish/v1/Systems/{{ vm_name }}"
-    follow_redirects: yes
+    follow_redirects: true
     user: "{{ bmc_user }}"
     password: "{{ bmc_password }}"
     method: GET
@@ -16,11 +16,11 @@
     return_content: true
   register: http_reply
 
-- debug: # noqa unnamed-task
+- debug:  # noqa unnamed-task
     msg: "{{ base_bmc_address }}/redfish/v1/Systems/{{ vm_name }}"
     verbosity: 1
 
-- debug: # noqa unnamed-task
+- debug:  # noqa unnamed-task
     var: http_reply
     verbosity: 1
 
@@ -36,13 +36,13 @@
     password: "{{ bmc_password }}"
     method: POST
     body_format: json
-    body: { "ResetType": "ForceOff" }
+    body: {"ResetType": "ForceOff"}
     status_code: [200, 204]
     force_basic_auth: false
     validate_certs: false
     return_content: true
   register: redfish_poweroff
-  ignore_errors: yes
+  ignore_errors: true
 
 - name: KVM Eject Virtual Media (if any) {{ target_host }}
   uri:
@@ -56,9 +56,9 @@
     validate_certs: false
     return_content: true
   register: redfish_reply
-  ignore_errors: yes
+  ignore_errors: true
 
-- debug: # noqa unnamed-task
+- debug:  # noqa unnamed-task
     var: redfish_reply
     verbosity: 1
 
@@ -69,7 +69,7 @@
     password: "{{ bmc_password }}"
     method: POST
     body_format: json
-    body: { "Image": "{{ boot_iso_url }}", "Inserted": true }
+    body: {"Image": "{{ boot_iso_url }}", "Inserted": true}
     status_code: [200, 204]
     force_basic_auth: false
     validate_certs: false
@@ -80,7 +80,7 @@
   retries: 20
   delay: 30
 
-- debug: # noqa unnamed-task
+- debug:  # noqa unnamed-task
     var: redfish_reply
     verbosity: 1
 
@@ -96,7 +96,7 @@
   register: redfish_reply
   when: ansible_verbosity >= 1
 
-- debug: # noqa unnamed-task
+- debug:  # noqa unnamed-task
     var: redfish_reply
     verbosity: 1
 
@@ -122,7 +122,7 @@
     return_content: true
   register: redfish_reply
 
-- debug: # noqa unnamed-task
+- debug:  # noqa unnamed-task
     var: redfish_reply
     verbosity: 1
 
@@ -137,7 +137,7 @@
     return_content: true
   register: redfish_reply
 
-- debug: # noqa unnamed-task
+- debug:  # noqa unnamed-task
     var: redfish_reply
     verbosity: 1
 
@@ -148,7 +148,7 @@
     password: "{{ bmc_password }}"
     method: POST
     body_format: json
-    body: { "ResetType": "ForceRestart" }
+    body: {"ResetType": "ForceRestart"}
     status_code: [200, 204]
     force_basic_auth: false
     validate_certs: false
@@ -163,7 +163,7 @@
     password: "{{ bmc_password }}"
     method: POST
     body_format: json
-    body: { "ResetType": "ForceOn" }
+    body: {"ResetType": "ForceOn"}
     # redfish specification: https://www.dmtf.org/sites/default/files/standards/documents/DSP0266_1.19.0.pdf
     status_code: [200, 201, 202, 204]
     force_basic_auth: false
