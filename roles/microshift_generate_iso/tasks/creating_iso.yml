@@ -7,10 +7,12 @@
   register: microshift_installer_template
 
 - name: Add the microshift installer blueprint to image builder
+  become: true
   ansible.builtin.command:
     composer-cli blueprints push {{ microshift_generate_iso_folder }}/microshift-installer.toml
 
 - name: Start the ostree ISO build
+  become: true
   ansible.builtin.command: >
     composer-cli -j compose start-ostree --url http://localhost:8085/repo/
      --ref "rhel/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}/edge"
@@ -22,6 +24,7 @@
     build_id_installer: "{{ composed_image.stdout | from_json | json_query('[].body.build_id') | first }}"
 
 - name: Wait for image build to complete
+  become: true
   ansible.builtin.command:
     composer-cli -j compose status
   delay: 30
@@ -40,8 +43,15 @@
     downloaded_iso_path: "{{ microshift_generate_iso_folder }}/{{ build_id_installer }}.iso"
 
 - name: Download the iso
+  become: true
   ansible.builtin.command:
     composer-cli compose image {{ build_id_installer }} --filename {{ downloaded_iso_path }}
+
+- name: Change ownership of dowloaded iso
+  ansible.builtin.file:
+    path: "{{ downloaded_iso_path }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
 
 - name: Create the microshift installer file
   ansible.builtin.template:
