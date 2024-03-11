@@ -48,6 +48,7 @@
     composer-cli compose image {{ build_id_installer }} --filename {{ downloaded_iso_path }}
 
 - name: Change ownership of dowloaded iso
+  become: true
   ansible.builtin.file:
     path: "{{ downloaded_iso_path }}"
     owner: "{{ ansible_user }}"

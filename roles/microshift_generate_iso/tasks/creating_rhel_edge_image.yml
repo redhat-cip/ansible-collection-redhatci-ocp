@@ -7,10 +7,12 @@
   register: blueprint_minimal_install_file
 
 - name: Add the microshift install blueprint to image builder
+  become: true
   ansible.builtin.command:
     composer-cli blueprints push {{ microshift_generate_iso_folder }}/minimal_microshift.toml
 
 - name: Compose image
+  become: true
   ansible.builtin.command: >
     composer-cli -j compose start-ostree
      --ref "rhel/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}/edge"
@@ -23,6 +25,7 @@
   when: composed_image.changed
 
 - name: Wait for image build to complete
+  become: true
   ansible.builtin.command:
     composer-cli -j compose status
   delay: 30
@@ -38,13 +41,15 @@
 
 - name: Set fact download image path
   set_fact:
-    downloaded_edge_image_path: "{{ microshift_generate_iso_folder }}/{{ build_id }}-container.tar"  
+    downloaded_edge_image_path: "{{ microshift_generate_iso_folder }}/{{ build_id }}-container.tar"
 
 - name: Download the image
+  become: true
   ansible.builtin.command:
     composer-cli compose image {{ build_id }} --filename {{ downloaded_edge_image_path }}
 
 - name: Change permission of the image
+  become: true
   ansible.builtin.file:
     path: "{{ downloaded_edge_image_path }}"
     mode: a+r
