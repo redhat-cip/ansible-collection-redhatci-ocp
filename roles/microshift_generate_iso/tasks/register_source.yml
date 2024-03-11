@@ -24,6 +24,7 @@
   register: blueprint_files
 
 - name: Add the source to image builder
+  become: true
   ansible.builtin.command:
     composer-cli sources add {{ item.path }}
   loop: "{{ blueprint_files.files }}"
