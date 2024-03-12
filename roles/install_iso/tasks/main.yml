@@ -8,8 +8,8 @@
   uri:
     url: "{{ base_bmc_address }}/redfish/v1/Systems/{{ vm_name }}"
     follow_redirects: true
-    user: "{{ bmc_user }}"
-    password: "{{ bmc_password }}"
+    user: "{{ bmc_user | default(omit) }}"
+    password: "{{ bmc_password | default(omit) }}"
     method: GET
     status_code: [200, 201]
     validate_certs: false
@@ -32,8 +32,8 @@
 - name: KVM Force Power Off System {{ target_host }}
   uri:
     url: "{{ system_uuid_url }}/Actions/ComputerSystem.Reset"
-    user: "{{ bmc_user }}"
-    password: "{{ bmc_password }}"
+    user: "{{ bmc_user | default(omit) }}"
+    password: "{{ bmc_password | default(omit) }}"
     method: POST
     body_format: json
     body: {"ResetType": "ForceOff"}
@@ -47,8 +47,8 @@
 - name: KVM Eject Virtual Media (if any) {{ target_host }}
   uri:
     url: "{{ system_manager_url }}/VirtualMedia/Cd/Actions/VirtualMedia.EjectMedia"
-    user: "{{ bmc_user }}"
-    password: "{{ bmc_password }}"
+    user: "{{ bmc_user | default(omit) }}"
+    password: "{{ bmc_password | default(omit) }}"
     method: POST
     body_format: json
     body: {}
@@ -65,8 +65,8 @@
 - name: KVM Insert Virtual Media {{ target_host }}
   uri:
     url: "{{ system_manager_url }}/VirtualMedia/Cd/Actions/VirtualMedia.InsertMedia"
-    user: "{{ bmc_user }}"
-    password: "{{ bmc_password }}"
+    user: "{{ bmc_user | default(omit) }}"
+    password: "{{ bmc_password | default(omit) }}"
     method: POST
     body_format: json
     body: {"Image": "{{ boot_iso_url }}", "Inserted": true}
@@ -87,8 +87,8 @@
 - name: KVM Verify Virtual Media {{ target_host }}
   uri:
     url: "{{ system_manager_url }}/VirtualMedia/Cd"
-    user: "{{ bmc_user }}"
-    password: "{{ bmc_password }}"
+    user: "{{ bmc_user | default(omit) }}"
+    password: "{{ bmc_password | default(omit) }}"
     method: GET
     status_code: [200, 201]
     validate_certs: false
@@ -103,8 +103,8 @@
 - name: KVM Set OneTimeBoot Virtual Media {{ target_host }}
   uri:
     url: "{{ system_uuid_url }}"
-    user: "{{ bmc_user }}"
-    password: "{{ bmc_password }}"
+    user: "{{ bmc_user | default(omit) }}"
+    password: "{{ bmc_password | default(omit) }}"
     method: PATCH
     body_format: json
     body:
@@ -129,8 +129,8 @@
 - name: KVM Verify System Power State {{ target_host }}
   uri:
     url: "{{ system_uuid_url }}"
-    user: "{{ bmc_user }}"
-    password: "{{ bmc_password }}"
+    user: "{{ bmc_user | default(omit) }}"
+    password: "{{ bmc_password | default(omit) }}"
     method: GET
     status_code: [200, 201]
     validate_certs: false
@@ -144,8 +144,8 @@
 - name: KVM Force Restart System {{ target_host }}
   uri:
     url: "{{ system_uuid_url }}/Actions/ComputerSystem.Reset"
-    user: "{{ bmc_user }}"
-    password: "{{ bmc_password }}"
+    user: "{{ bmc_user | default(omit) }}"
+    password: "{{ bmc_password | default(omit) }}"
     method: POST
     body_format: json
     body: {"ResetType": "ForceRestart"}
@@ -159,8 +159,8 @@
 - name: KVM Force Power On System {{ target_host }}
   uri:
     url: "{{ system_uuid_url }}/Actions/ComputerSystem.Reset"
-    user: "{{ bmc_user }}"
-    password: "{{ bmc_password }}"
+    user: "{{ bmc_user | default(omit) }}"
+    password: "{{ bmc_password | default(omit) }}"
     method: POST
     body_format: json
     body: {"ResetType": "ForceOn"}
