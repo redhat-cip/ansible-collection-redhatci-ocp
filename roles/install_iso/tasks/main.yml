@@ -3,6 +3,18 @@
 # Virtual Redfish BMC
 # https://docs.openstack.org/sushy-tools/latest/user/dynamic-emulator.html#uefi-boot
 #
+- name: Find any previous Microshift img files in libvirt images dir for the SUT to be provisioned
+  find:
+    paths: /var/lib/libvirt/images
+    patterns: '(?i)microshift-{{ vm_name }}\.img'
+    use_regex: true
+  register: old_microshift_img_files
+
+- name: Remove any found Microshift img files for this SUT before proceeding
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ old_microshift_img_files.files }}"
 
 - name: Identify System Manager
   uri:
